@@ -14,6 +14,7 @@ Pros:
  - No dependencies
  - Simple API
  - MIT license
+ - only 1 KB minified and gzipped
 
 
 Examples

@@ -1,8 +1,10 @@
 /**
  * Collection.js is small but yet powerfull localstorage based database.
  *
- * @author Dawid Kraczowski <Crac>
+ * @author Dawid Kraczowski <crac>
+ * @thanks: Dawid Winiarczyk <morriq>
  * @license MIT
+ * @version
  */
 var Collection = (function() {
 
@@ -144,7 +146,6 @@ var Collection = (function() {
                 configurable: false,
                 value: id
             });
-            collectionObj._index[id] = i;
             collectionObj[i] = data[id];
         }
         return data;
@@ -170,13 +171,8 @@ var Collection = (function() {
         if (index === -1) {
             return null;
         }
-        delete collectionObj[index];
 
-        for (var i = ++index; i < collectionObj.length; i++) {
-            collectionObj[i - 1] = collectionObj[i];
-        }
-        delete collectionObj[i - 1];
-        --collectionObj.length;
+        Array.prototype.splice.call(collectionObj, index, 1);
 
         return entity;
     }
@@ -187,10 +183,7 @@ var Collection = (function() {
      * @private
      */
     function _resetCollection(collectionObj) {
-        for (var i = 0; i < collectionObj.length; i++) {
-            delete collectionObj[i];
-        }
-        collectionObj.length = 0;
+        Array.prototype.splice.call(collectionObj, 0, collectionObj.length);
     }
 
     /**
@@ -204,7 +197,7 @@ var Collection = (function() {
         for (var k in collectionObj._data) {
             collectionObj[i++] = collectionObj._data[k];
         }
-        collectionObj.length = i + 1;
+        collectionObj.length = i;
     }
 
     /**
@@ -223,11 +216,6 @@ var Collection = (function() {
                 enumerable: false,
                 writable: true,
                 value: name
-            },
-            _index: {
-                enumerable: false,
-                writable: true,
-                value: {}
             },
             _cursor: {
                 enumerable: false,
@@ -320,6 +308,15 @@ var Collection = (function() {
             if (!this._data.hasOwnProperty(item._id)) {
                 throw new Error('Could not find entity with id ' + item._id + ' in collection ' + this.name);
             }
+
+            if (item.propertyIsEnumerable('_id')) {
+                Object.defineProperty(item, '_id', {
+                    enumerable: false,
+                    writable: false,
+                    value: item._id
+                });
+            }
+
             this._data[item._id] = item;
             //update collection's item
             for (var i = 0; i < this.length; i++) {
@@ -345,16 +342,15 @@ var Collection = (function() {
 
         if (_isFunction(this._query)) {
             if (this._query(item)) {
-                this[this._meta.length] = item;
-                this.length = this._meta.length;
+                this[this.length] = item;
+                this.length++;
             }
         } else {
-            this[this._meta.length] = item;
-            this.length = this._meta.length;
+            this[this.length] = item;
+            this.length++;
         }
 
         this._meta.length++;
-        this._index[this._meta.lastId] = this._meta.length - 1;
         _saveMeta(this);
 
         return item._id;
@@ -385,8 +381,7 @@ var Collection = (function() {
         _removeFromCollection(this, this._data[id]);
         delete this._data[id];
         this._meta.length--;
-        this._meta.map.splice(this._index[id], 1);
-        delete this._index[id];
+        this._meta.map.splice(this._meta.map.indexOf(id), 1);
         _saveMeta(this);
     };
 
@@ -396,10 +391,11 @@ var Collection = (function() {
      * @param {Function} sort optional sorting function
      */
     Collection.prototype.find = function(query, sort) {
+
         if (!_isFunction(query)) {
-            this._query = null;
 
             if (_isFunction(sort)) {
+                _resetCollection(this);
                 var arr = [];
                 for (var key in this._data) {
                     arr.push(this._data[key]);
@@ -409,13 +405,17 @@ var Collection = (function() {
                     this[i] = arr[i];
                 }
                 this.length = arr.length;
+            } else if (this._query === null) {
+                return;
             } else {
+                this._query = null;
                 _rewriteData(this);
             }
             return;
         } else {
             this._query = query;
         }
+
         _resetCollection(this);
 
         var arr = [];

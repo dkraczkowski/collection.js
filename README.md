@@ -2,6 +2,14 @@ collection.js
 =============
 
 Collection.js is small but yet powerfull local database build on top of the localstorage.
+Collection.js works with all modern browsers:
+ - >=FF 4.0
+ - >=Chrome 5
+ - >=IE9
+ - >=Opera 11.6
+ - >=Safari 5.1
+
+If you need IE8 support use [es5 pollyfill](https://github.com/inexorabletash/polyfill/blob/master/es5.js)
 
 Why I should bother?
 ===================

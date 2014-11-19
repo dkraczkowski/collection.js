@@ -285,18 +285,6 @@ var Collection = (function() {
             enumerable: false,
             writable: true
         },
-        next: {
-            enumerable: false,
-            writable: true
-        },
-        prev: {
-            enumerable: false,
-            writable: true
-        },
-        current: {
-            enumerable: false,
-            writable: true
-        },
         drop: {
             enumerable: false,
             writable: true

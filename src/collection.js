@@ -321,6 +321,13 @@ var Collection = (function() {
                 throw new Error('Could not find entity with id ' + item._id + ' in collection ' + this.name);
             }
             this._data[item._id] = item;
+            //update collection's item
+            for (var i = 0; i < this.length; i++) {
+                if (this[i]._id === item._id) {
+                    this[i] = item;
+                    break;
+                }
+            }
             window.localStorage.setItem(this.name + '_' + item._id, JSON.stringify(store));
             return item._id;
         }

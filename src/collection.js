@@ -4,7 +4,7 @@
  * @author Dawid Kraczowski <crac>
  * @thanks: Dawid Winiarczyk <morriq>
  * @license MIT
- * @version
+ * @version 1.0.1
  */
 var Collection = (function() {
 
@@ -214,7 +214,7 @@ var Collection = (function() {
         Object.defineProperties(this, {
             name: {
                 enumerable: false,
-                writable: true,
+                writable: false,
                 value: name
             },
             _cursor: {

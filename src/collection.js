@@ -4,7 +4,7 @@
  * @author Dawid Kraczowski <crac>
  * @thanks: Dawid Winiarczyk <morriq>
  * @license MIT
- * @version 1.0.1
+ * @version 1.1.0
  */
 var Collection = (function() {
 
@@ -43,6 +43,16 @@ var Collection = (function() {
      */
     function _isFunction(object) {
         return typeof object === 'function';
+    }
+
+    /**
+     * Checks if given value is a string
+     * @param {*} object
+     * @returns {boolean}
+     * @private
+     */
+    function _isString(object) {
+        return typeof object === 'string';
     }
 
     /**
@@ -120,38 +130,6 @@ var Collection = (function() {
     }
 
     /**
-     * Loads collection's data from localstorage and unserialize the objects
-     * @param {Collection} collectionObj
-     * @returns {*}
-     * @private
-     */
-    function _loadCollection(collectionObj) {
-
-        if (collectionObj._meta.length === 0) {
-            return [];
-        }
-        var data = {};
-        collectionObj.length = collectionObj._meta.length;
-        for (var i = 0; i < collectionObj._meta.length; i++) {
-            var id = collectionObj._meta.map[i];
-            var entity = JSON.parse(window.localStorage.getItem(collectionObj.name + '_' + id));
-            data[id] = collectionObj._unserialize ? collectionObj._unserialize(entity) : entity;
-            if (!_isObject(data[id])) {
-                throw new Error('unserialize function must return an object');
-            }
-            //never allow for overriding id
-            Object.defineProperty(data[id], '_id', {
-                enumerable: false,
-                writable: false,
-                configurable: false,
-                value: id
-            });
-            collectionObj[i] = data[id];
-        }
-        return data;
-    }
-
-    /**
      * Removes item from collection
      * This function is only used as an internal helper
      * @param {Collection} collectionObj
@@ -203,13 +181,14 @@ var Collection = (function() {
     /**
      * Creates new collection object
      * @param name collection's name
-     * @param unserialize function called when data is loaded from localstorage
-     * @param serialize function called before data is saved to localstorage
+     * @param reader function called when data is loaded from localstorage
+     * @param writer function called before data is saved to localstorage
      * @constructor
      */
-    function Collection(name, unserialize, serialize) {
-        var serialize = _isFunction(serialize) ? serialize : false;
-        var unserialize = _isFunction(unserialize) ? unserialize : false;
+    function Collection(name, reader, writer) {
+
+        var writer = _isFunction(writer) ? writer : null;
+        var reader = _isFunction(reader) ? reader : null;
 
         Object.defineProperties(this, {
             name: {
@@ -237,15 +216,17 @@ var Collection = (function() {
                 writable: true,
                 value: null
             },
-            _serialize : {
+            _writer : {
                 enumerable: false,
                 writable: false,
-                value: serialize
+                configurable: true,
+                value: writer
             },
-            _unserialize : {
+            _reader : {
                 enumerable: false,
                 writable: false,
-                value: unserialize
+                configurable: true,
+                value: reader
             },
             length: {
                 writable: true,
@@ -253,11 +234,14 @@ var Collection = (function() {
             }
 
         });
-        this._meta = _getMeta(this);
-        this._data = _loadCollection(this);
+        this.read();
     }
     Object.defineProperties(Collection.prototype, {
         id: {
+            enumerable: false,
+            writable: true
+        },
+        read: {
             enumerable: false,
             writable: true
         },
@@ -280,8 +264,56 @@ var Collection = (function() {
         sort: {
             enumerable: false,
             writable: true
+        },
+        group: {
+            enumerable: false,
+            writable: true
         }
     });
+
+    /**
+     * Reads collection from local storage
+     * @param {Function} [reader]
+     */
+    Collection.prototype.read = function(reader) {
+        if (_isFunction(reader)) {//define reader
+            Object.defineProperty(this, '_reader', {
+                enumerable: false,
+                writable: false,
+                configurable: true,
+                value: reader
+            });
+        }
+
+        this._meta = _getMeta(this);
+
+        if (this._meta.length === 0) {
+            return;
+        }
+        var data = {};
+        this.length = this._meta.length;
+        for (var i = 0; i < this._meta.length; i++) {
+            var id = this._meta.map[i];
+            var entity = JSON.parse(window.localStorage.getItem(this.name + '_' + id));
+            data[id] = this._reader ? this._reader(entity) : entity;
+            if (!_isObject(data[id])) {
+                if (data[id] === false) {
+                    delete data[id];
+                    continue;
+                }
+                throw new Error('reader function must return an object or false');
+            }
+            //never allow for overriding id
+            Object.defineProperty(data[id], '_id', {
+                enumerable: false,
+                writable: false,
+                configurable: false,
+                value: id
+            });
+            this[i] = data[id];
+        }
+        this._data = data;
+    };
 
     /**
      * Gets entity  by its id
@@ -295,13 +327,16 @@ var Collection = (function() {
     /**
      * Saves or updates entity in the collection
      * @param {Object} item
-     * @returns {Number} entity's id
+     * @returns {Number|false} entity's id if object was saved otherwise false
      */
     Collection.prototype.save = function(item) {
 
-        var store = _isFunction(this._serialize) ? this._serialize(_cloneObject(item)) : item;
+        var store = _isFunction(this._writer) ? this._writer(_cloneObject(item)) : item;
         if (!_isObject(store)) {
-            throw new Error('serialize function must return object');
+            if (store === false) {
+                return false;
+            }
+            throw new Error('writer function must return an object or false');
         }
 
         if (item._id) {
@@ -389,6 +424,7 @@ var Collection = (function() {
      * Finds matching entities and updates the collection
      * @param {Function} query optional filter function
      * @param {Function} sort optional sorting function
+     * @return {Collection}
      */
     Collection.prototype.find = function(query, sort) {
 
@@ -406,12 +442,12 @@ var Collection = (function() {
                 }
                 this.length = arr.length;
             } else if (this._query === null) {
-                return;
+                return this;
             } else {
                 this._query = null;
                 _rewriteData(this);
             }
-            return;
+            return this;
         } else {
             this._query = query;
         }
@@ -433,11 +469,13 @@ var Collection = (function() {
             this[i] = arr[i];
         }
         this.length = arr.length;
+        return this;
     };
 
     /**
      * Sorts the collection
      * @param {Function} sort sorting function
+     * @return {Collection}
      */
     Collection.prototype.sort = function(sort) {
         var arr = [];
@@ -450,6 +488,31 @@ var Collection = (function() {
             this[i] = arr[i];
         }
         this.length = arr.length;
+        return this;
+    };
+
+    /**
+     * Groups all collection's entities by property and returns
+     * object containing grouped entities
+     * @param {String} property property by which collection will be grouped
+     * @return {Object}
+     */
+    Collection.prototype.group = function(property) {
+        var grouped = {};
+
+        for (var i = 0; i < this.length; i++) {
+            var prop = _isString(this[i][property]) ? this[i][property] : '_ungrouped';
+            if (prop === '_ungrouped' && !grouped.hasOwnProperty('_ungrouped')) {
+                Object.defineProperty(grouped, '_ungrouped', {
+                    enumerable: false,
+                    value: []
+                });
+            }
+            grouped[prop] = grouped[prop] || [];
+            grouped[prop].push(this[i]);
+        }
+
+        return grouped;
     };
 
     /**

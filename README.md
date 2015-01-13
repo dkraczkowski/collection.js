@@ -72,6 +72,13 @@ Getting by id
 myCollection.id(1);
 ```
 
+Grouping a collection
+----------------
+
+```js
+myCollection.group('key');
+```
+
 Destroying a collection
 ----------------
 
@@ -91,15 +98,23 @@ for (var i = 0; i < myCollection.length; i++) {
 API
 ========
 
-`new Collection(name, unserializer, serializer)`
+`new Collection(name, reader, writer)`
 ------------------------------------------------
 
 Creates new collection object
 
 ###Properties
  - `name` collection's name points to localStorage's key name
- - `unserializer` (optional) called when collection is loaded from localStorage, allows you to cast data, or extend entities
- - `serializer` (optional) called right before the entity is saved
+ - `reader` (optional) called when collection is loaded from localStorage, allows you to cast data, or extend entities
+ - `writer` (optional) called right before the entity is saved
+
+`Collection.read`
+------------------------------------------------
+
+Reloads data from localstorage
+
+###Properties
+- `reader` (optional) called when collection is loaded from localStorage on each entity object
 
 `Collection.save(entity)`
 ------------------------------------------------
@@ -138,6 +153,15 @@ Sorts the collection
 
 ###Properties
 - `sort` sorting function
+
+
+`Collection.group(key)`
+------------------------------------------------
+Groups collection by key's value and returns object with grouped elements.
+
+###Properties
+- `key` entities' property name which value should be used to group entities.
+
 
 `Collection.drop()`
 ------------------------------------------------

@@ -30,6 +30,90 @@ function range(a, b, step){
     }
     return A;
 }
+var fruits = ["Dragonfruit", "Nectarine", "Star fruit", "Honeydew", "Grape", "Rock melon", "Tangerine", "Melon", "Cherry", "Goji berry", "Blood Orange", "Breadfruit", "Pear", "Cantaloupe", "Blackcurrant", "Orange", "Tomato", "Kumquat", "Strawberry", "Fig", "Physalis", "Mango", "Feijoa", "Boysenberry", "Cherimoya", "Damson", "Peach", "Pomelo", "Miracle fruit", "Plum", "Mandarine", "Gooseberry", "Lychee", "Pepper", "Jujube", "Cucumber", "Ugli fruit", "Papaya", "Eggplant", "Honeydew", "Watermelon", "Olive", "Lime", "Jambul", "Banana", "Cloudberry", "Passionfruit", "Salmon berry", "Blueberry", "Pineapple", "Durian", "Persimmon", "Apple", "Lemon", "Loquat", "Pomegranate", "Rambutan", "Satsuma", "Guava", "Avocado", "Coconut", "Mulberry", "Raisin", "Huckleberry", "Kiwi fruit", "Purple Mangosteen", "Blackberry", "Marion berry", "Bilberry", "Nut", "Raspberry", "Redcurrant", "Tamarillo", "Date", "Currant", "Apricot", "Cantaloupe", "Jackfruit", "Quince", "Cranberry", "Elderberry", "Grapefruit", "Salal berry"];
+var complexFruits = [
+    {
+        name: 'Apple',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E', 'K'],
+        calories: 95,
+        group: 'A',
+        proteins: 0.47,
+        fiber: 4.4
+    },
+    {
+        name: 'Banana',
+        vitamins: ['A', 'B1', 'B2', 'C', 'E', 'K'],
+        calories: 105,
+        group: 'B',
+        proteins: 1.29,
+        fiber: 3.1
+
+    },
+    {
+        name: 'Blueberries',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E', 'K'],
+        calories: 84,
+        group: 'B',
+        proteins: 1.1,
+        fiber: 3.6
+    },
+    {
+        name: 'Cherries',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E', 'K'],
+        proteins: 1.46,
+        calories: 87,
+        group: 'C',
+        fiber: 2.9
+    },
+    {
+        name: 'Lemon',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E'],
+        proteins: 0.92,
+        calories: 24,
+        group: 'L',
+        fiber: 2.4
+    },
+    {
+        name: 'Lime',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E', 'K'],
+        proteins: 2.23,
+        calories: 81,
+        group: 'L',
+        fiber: 7.8
+    },
+    {
+        name: 'Lychee',
+        vitamins: ['B1', 'B2', 'B6', 'C', 'E', 'K'],
+        proteins: 1.58,
+        calories: 125,
+        group: 'L',
+        fiber: 2.5
+    },
+    {
+        name: 'Orange',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E'],
+        proteins: 1.23,
+        calories: 62,
+        group: {'invalid': 12},
+        fiber: 3.1
+    },
+    {
+        name: 'Peach',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E', 'K'],
+        proteins: 1.36,
+        calories: 58,
+        group: 152,
+        fiber: 2.2
+    },
+    {
+        name: 'Pear',
+        vitamins: ['A', 'B1', 'B2', 'B6', 'C', 'E', 'K'],
+        proteins: 0.68,
+        calories: 103,
+        fiber: 5.5
+    }
+
+];
 
 describe('Collection.js', function() {
 
@@ -122,7 +206,6 @@ describe('Collection.js', function() {
 
     it ('should be able to find group of elements', function() {
         localStorage.clear();
-        var fruits = ["Dragonfruit", "Nectarine", "Star fruit", "Honeydew", "Grape", "Rock melon", "Tangerine", "Melon", "Cherry", "Goji berry", "Blood Orange", "Breadfruit", "Pear", "Cantaloupe", "Blackcurrant", "Orange", "Tomato", "Kumquat", "Strawberry", "Fig", "Physalis", "Mango", "Feijoa", "Boysenberry", "Cherimoya", "Damson", "Peach", "Pomelo", "Miracle fruit", "Plum", "Mandarine", "Gooseberry", "Lychee", "Pepper", "Jujube", "Cucumber", "Ugli fruit", "Papaya", "Eggplant", "Honeydew", "Watermelon", "Olive", "Lime", "Jambul", "Banana", "Cloudberry", "Passionfruit", "Salmon berry", "Blueberry", "Pineapple", "Durian", "Persimmon", "Apple", "Lemon", "Loquat", "Pomegranate", "Rambutan", "Satsuma", "Guava", "Avocado", "Coconut", "Mulberry", "Raisin", "Huckleberry", "Kiwi fruit", "Purple Mangosteen", "Blackberry", "Marion berry", "Bilberry", "Nut", "Raspberry", "Redcurrant", "Tamarillo", "Date", "Currant", "Apricot", "Cantaloupe", "Jackfruit", "Quince", "Cranberry", "Elderberry", "Grapefruit", "Salal berry"];
         var collection = new Collection('Fruits');
         for (var i = 0; i < fruits.length; i++) {
             var data = {
@@ -153,7 +236,6 @@ describe('Collection.js', function() {
 
     it ('should be able to sort group of elements', function() {
         localStorage.clear();
-        var fruits = ["Dragonfruit", "Nectarine", "Star fruit", "Honeydew", "Grape", "Rock melon", "Tangerine", "Melon", "Cherry", "Goji berry", "Blood Orange", "Breadfruit", "Pear", "Cantaloupe", "Blackcurrant", "Orange", "Tomato", "Kumquat", "Strawberry", "Fig", "Physalis", "Mango", "Feijoa", "Boysenberry", "Cherimoya", "Damson", "Peach", "Pomelo", "Miracle fruit", "Plum", "Mandarine", "Gooseberry", "Lychee", "Pepper", "Jujube", "Cucumber", "Ugli fruit", "Papaya", "Eggplant", "Honeydew", "Watermelon", "Olive", "Lime", "Jambul", "Banana", "Cloudberry", "Passionfruit", "Salmon berry", "Blueberry", "Pineapple", "Durian", "Persimmon", "Apple", "Lemon", "Loquat", "Pomegranate", "Rambutan", "Satsuma", "Guava", "Avocado", "Coconut", "Mulberry", "Raisin", "Huckleberry", "Kiwi fruit", "Purple Mangosteen", "Blackberry", "Marion berry", "Bilberry", "Nut", "Raspberry", "Redcurrant", "Tamarillo", "Date", "Currant", "Apricot", "Cantaloupe", "Jackfruit", "Quince", "Cranberry", "Elderberry", "Grapefruit", "Salal berry"];
         var collection = new Collection('Fruits');
         for (var i = 0; i < fruits.length; i++) {
             var data = {
@@ -184,7 +266,6 @@ describe('Collection.js', function() {
 
     it ('should be able to find and sort', function() {
         localStorage.clear();
-        var fruits = ["Dragonfruit", "Nectarine", "Star fruit", "Honeydew", "Grape", "Rock melon", "Tangerine", "Melon", "Cherry", "Goji berry", "Blood Orange", "Breadfruit", "Pear", "Cantaloupe", "Blackcurrant", "Orange", "Tomato", "Kumquat", "Strawberry", "Fig", "Physalis", "Mango", "Feijoa", "Boysenberry", "Cherimoya", "Damson", "Peach", "Pomelo", "Miracle fruit", "Plum", "Mandarine", "Gooseberry", "Lychee", "Pepper", "Jujube", "Cucumber", "Ugli fruit", "Papaya", "Eggplant", "Honeydew", "Watermelon", "Olive", "Lime", "Jambul", "Banana", "Cloudberry", "Passionfruit", "Salmon berry", "Blueberry", "Pineapple", "Durian", "Persimmon", "Apple", "Lemon", "Loquat", "Pomegranate", "Rambutan", "Satsuma", "Guava", "Avocado", "Coconut", "Mulberry", "Raisin", "Huckleberry", "Kiwi fruit", "Purple Mangosteen", "Blackberry", "Marion berry", "Bilberry", "Nut", "Raspberry", "Redcurrant", "Tamarillo", "Date", "Currant", "Apricot", "Cantaloupe", "Jackfruit", "Quince", "Cranberry", "Elderberry", "Grapefruit", "Salal berry"];
         var collection = new Collection('Fruits');
         for (var i = 0; i < fruits.length; i++) {
             var data = {
@@ -219,9 +300,31 @@ describe('Collection.js', function() {
 
     });
 
+    it ('should be able to group a collection', function() {
+        localStorage.clear();
+
+        var collection = new Collection('Fruits');
+        for (var i = 0; i < complexFruits.length; i++) {
+            collection.save(complexFruits[i]);
+        }
+        var grouped = collection.group('group');
+        var result = {
+            'A': 1,
+            'B': 2,
+            'C': 1,
+            'L': 3,
+            '_ungrouped': 3
+        };
+
+        for (var i in result) {
+            expect(grouped[i].length).toEqual(result[i]);
+        }
+
+    });
+
     it ('should be able to drop a collection', function() {
         localStorage.clear();
-        var fruits = ["Dragonfruit", "Nectarine", "Star fruit", "Honeydew", "Grape", "Rock melon", "Tangerine", "Melon", "Cherry", "Goji berry", "Blood Orange", "Breadfruit", "Pear", "Cantaloupe", "Blackcurrant", "Orange", "Tomato", "Kumquat", "Strawberry", "Fig", "Physalis", "Mango", "Feijoa", "Boysenberry", "Cherimoya", "Damson", "Peach", "Pomelo", "Miracle fruit", "Plum", "Mandarine", "Gooseberry", "Lychee", "Pepper", "Jujube", "Cucumber", "Ugli fruit", "Papaya", "Eggplant", "Honeydew", "Watermelon", "Olive", "Lime", "Jambul", "Banana", "Cloudberry", "Passionfruit", "Salmon berry", "Blueberry", "Pineapple", "Durian", "Persimmon", "Apple", "Lemon", "Loquat", "Pomegranate", "Rambutan", "Satsuma", "Guava", "Avocado", "Coconut", "Mulberry", "Raisin", "Huckleberry", "Kiwi fruit", "Purple Mangosteen", "Blackberry", "Marion berry", "Bilberry", "Nut", "Raspberry", "Redcurrant", "Tamarillo", "Date", "Currant", "Apricot", "Cantaloupe", "Jackfruit", "Quince", "Cranberry", "Elderberry", "Grapefruit", "Salal berry"];
+
         var collection = new Collection('Fruits');
         for (var i = 0; i < fruits.length; i++) {
             var data = {

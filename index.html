@@ -1,0 +1,263 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Collection.js by dkraczkowski</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/dkraczkowski/collection.js">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/dkraczkowski/collection.js/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/dkraczkowski/collection.js/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Collection.js</h1>
+          <p>Collection.js is small but yet powerfull local database build on top of the localstorage.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/dkraczkowski">dkraczkowski</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="collectionjs" class="anchor" href="#collectionjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>collection.js</h1>
+
+<p>Collection.js is small but yet powerfull local database build on top of the localstorage.
+Collection.js works with all modern browsers:</p>
+
+<ul>
+<li>&gt;=FF 4.0</li>
+<li>&gt;=Chrome 5</li>
+<li>&gt;=IE9</li>
+<li>&gt;=Opera 11.6</li>
+<li>&gt;=Safari 5.1</li>
+</ul>
+
+<p>If you need IE8 support use <a href="https://github.com/inexorabletash/polyfill/blob/master/es5.js">es5 pollyfill</a></p>
+
+<h1>
+<a id="why-i-should-bother" class="anchor" href="#why-i-should-bother" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why I should bother?</h1>
+
+<p>If you are looking for simple solution to store you data locally and localStorage is not enough try collection.js.
+Collection.js gives you powerfull API, which allows you to save/update/remove/sort/filter data.</p>
+
+<h2>
+<a id="pros" class="anchor" href="#pros" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pros:</h2>
+
+<ul>
+<li>No configuration</li>
+<li>No dependencies</li>
+<li>Simple API</li>
+<li>MIT license</li>
+<li>only 1 KB minified and gzipped</li>
+</ul>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h1>
+
+<h2>
+<a id="creating-a-collection" class="anchor" href="#creating-a-collection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a collection</h2>
+
+<div class="highlight highlight-js"><pre><span class="pl-s">var</span> myCollection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Collection</span>(<span class="pl-s1"><span class="pl-pds">'</span>myCollection<span class="pl-pds">'</span></span>);</pre></div>
+
+<h2>
+<a id="adding-data-to-collection" class="anchor" href="#adding-data-to-collection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding data to collection</h2>
+
+<div class="highlight highlight-js"><pre>myCollection.save({test<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>});</pre></div>
+
+<h2>
+<a id="removing-data-from-collection" class="anchor" href="#removing-data-from-collection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Removing data from collection</h2>
+
+<div class="highlight highlight-js"><pre>myCollection.<span class="pl-s3">remove</span>(<span class="pl-c1">1</span>);</pre></div>
+
+<h2>
+<a id="quering-data" class="anchor" href="#quering-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quering data</h2>
+
+<div class="highlight highlight-js"><pre>myCollection.<span class="pl-s3">find</span>(<span class="pl-st">function</span>(<span class="pl-vpf">item</span>) {
+    <span class="pl-k">if</span> (item.<span class="pl-sc">description</span>.<span class="pl-s3">substring</span>(<span class="pl-s1"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>) <span class="pl-k">&gt;=</span> <span class="pl-c1">0</span>) {
+        <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+    }
+});
+</pre></div>
+
+<h2>
+<a id="sorting-data" class="anchor" href="#sorting-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sorting data</h2>
+
+<div class="highlight highlight-js"><pre>myCollection.<span class="pl-s3">sort</span>(<span class="pl-st">function</span>(<span class="pl-vpf">a</span>,<span class="pl-vpf">b</span>){
+    <span class="pl-k">return</span> a.order <span class="pl-k">-</span> b.order;
+});</pre></div>
+
+<h2>
+<a id="getting-by-id" class="anchor" href="#getting-by-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting by id</h2>
+
+<div class="highlight highlight-js"><pre>myCollection.<span class="pl-sc">id</span>(<span class="pl-c1">1</span>);</pre></div>
+
+<h2>
+<a id="grouping-a-collection" class="anchor" href="#grouping-a-collection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Grouping a collection</h2>
+
+<div class="highlight highlight-js"><pre>myCollection.group(<span class="pl-s1"><span class="pl-pds">'</span>key<span class="pl-pds">'</span></span>);</pre></div>
+
+<h2>
+<a id="destroying-a-collection" class="anchor" href="#destroying-a-collection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Destroying a collection</h2>
+
+<div class="highlight highlight-js"><pre>myCollection.destroy();</pre></div>
+
+<h2>
+<a id="looping-trough-the-collection" class="anchor" href="#looping-trough-the-collection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Looping trough the collection</h2>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">for</span> (<span class="pl-s">var</span> i <span class="pl-k">=</span> <span class="pl-c1">0</span>; i <span class="pl-k">&lt;</span> myCollection.<span class="pl-sc">length</span>; i<span class="pl-k">++</span>) {
+    <span class="pl-en">console</span><span class="pl-s3">.log</span>(myCollection[i]);
+}</pre></div>
+
+<h1>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h1>
+
+<h2>
+<a id="new-collectionname-reader-writer" class="anchor" href="#new-collectionname-reader-writer" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>new Collection(name, reader, writer)</code>
+</h2>
+
+<p>Creates new collection object</p>
+
+<h3>
+<a id="properties" class="anchor" href="#properties" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>name</code> collection's name points to localStorage's key name</li>
+<li>
+<code>reader</code> (optional) called when collection is loaded from localStorage, allows you to cast data, or extend entities</li>
+<li>
+<code>writer</code> (optional) called right before the entity is saved</li>
+</ul>
+
+<h2>
+<a id="collectionread" class="anchor" href="#collectionread" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.read</code>
+</h2>
+
+<p>Reloads data from localstorage</p>
+
+<h3>
+<a id="properties-1" class="anchor" href="#properties-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>reader</code> (optional) called when collection is loaded from localStorage on each entity object</li>
+</ul>
+
+<h2>
+<a id="collectionsaveentity" class="anchor" href="#collectionsaveentity" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.save(entity)</code>
+</h2>
+
+<p>Saves or updates entity in the collection, returns the entitie's id</p>
+
+<h3>
+<a id="properties-2" class="anchor" href="#properties-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>entity</code> object stored in the collection (after storing each object automatically gets immutable <code>_id</code> key)</li>
+</ul>
+
+<h2>
+<a id="collectionremoveentity" class="anchor" href="#collectionremoveentity" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.remove(entity)</code>
+</h2>
+
+<p>Removes existing entity</p>
+
+<h3>
+<a id="properties-3" class="anchor" href="#properties-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>entity</code> can be either entity or entities's id</li>
+</ul>
+
+<h2>
+<a id="collectionidid" class="anchor" href="#collectionidid" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.id(id)</code>
+</h2>
+
+<p>Returns entity with given id</p>
+
+<h3>
+<a id="properties-4" class="anchor" href="#properties-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>id</code> entitie's id</li>
+</ul>
+
+<h2>
+<a id="collectionfindquery-sort" class="anchor" href="#collectionfindquery-sort" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.find(query, sort)</code>
+</h2>
+
+<p>Filters entities matching the <code>query</code> function. If none passed all entities will be available in collection</p>
+
+<h3>
+<a id="properties-5" class="anchor" href="#properties-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>query</code> (optional) filter function</li>
+<li>
+<code>sort</code> (optional) sorting function</li>
+</ul>
+
+<h2>
+<a id="collectionsortsort" class="anchor" href="#collectionsortsort" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.sort(sort)</code>
+</h2>
+
+<p>Sorts the collection</p>
+
+<h3>
+<a id="properties-6" class="anchor" href="#properties-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>sort</code> sorting function</li>
+</ul>
+
+<h2>
+<a id="collectiongroupkey" class="anchor" href="#collectiongroupkey" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.group(key)</code>
+</h2>
+
+<p>Groups collection by key's value and returns object with grouped elements.</p>
+
+<h3>
+<a id="properties-7" class="anchor" href="#properties-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h3>
+
+<ul>
+<li>
+<code>key</code> entities' property name which value should be used to group entities.</li>
+</ul>
+
+<h2>
+<a id="collectiondrop" class="anchor" href="#collectiondrop" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>Collection.drop()</code>
+</h2>
+
+<p>Clears collection object and destroys collection's data stored in local storage</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
